@@ -1,0 +1,30 @@
+#配置文件
+AppEnv: "local"
+AppName: hg-app
+
+#redis配置
+RedisCommon:
+  Host: 127.0.0.1
+  Port: 6379
+  Password:
+  Database: 0
+  MaxIdle: 3
+  MaxActive: 10
+  IdleTimeout: 120
+  Ip:
+    - 11.12.1.1
+    - 11.12.1.2
+    - 11.12.1.3
+
+DbDefault:
+  Ip: 127.0.0.1
+  Port: 3306
+  User: root
+  Password: root
+  Database: test
+  MaxIdleConns: 10
+  MaxOpenConns: 100
+  ParseTime: true
+  ShowSql: true
+  UsePool: true
+

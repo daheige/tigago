@@ -1,0 +1,8 @@
+gutils/*.md
+*.log
+.idea/
+vendor/*
+logs
+settings.json
+golangci.log
+.DS_Store
