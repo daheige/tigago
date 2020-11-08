@@ -1,7 +1,7 @@
-package gresty
-
-// go http client support get,post,delete,patch,put,head,file method.
+// Package gresty for go http client
+// support get,post,delete,patch,put,head,file method.
 // go-resty/resty: https:// github.com/go-resty/resty
+package gresty
 
 import (
 	"bytes"
@@ -27,7 +27,7 @@ var (
 	respEmpty = errors.New("resp is empty")
 )
 
-//  Service 请求句柄设置
+// Service 请求句柄设置
 type Service struct {
 	BaseUri         string        // 请求地址url的前缀
 	Timeout         time.Duration // 请求超时限制
@@ -315,24 +315,27 @@ func (s *Service) GetResult(resp *resty.Response, err error) *Reply {
 		Err: err,
 	}
 
-	if err != nil {
-		res.StatusCode = http.StatusInternalServerError
-		return res
-	}
-
 	if resp == nil {
 		res.StatusCode = http.StatusServiceUnavailable
-		res.Err = respEmpty
+		if err != nil {
+			res.Err = err
+		} else {
+			res.Err = respEmpty
+		}
+
+		return res
 	}
 
 	res.Body = resp.Body()
 	res.StatusCode = resp.StatusCode()
+	if err != nil {
+		res.Err = fmt.Errorf("request error: %v,resp error: %v", err.Error(), resp.Error())
+		return res
+	}
+
 	if !resp.IsSuccess() || resp.StatusCode() != 200 {
-		if err != nil {
-			res.Err = fmt.Errorf("request error: %v,resp error: %v", err.Error(), resp.Error())
-		} else {
-			res.Err = fmt.Errorf("resp error: %v", resp.Error())
-		}
+		res.Err = fmt.Errorf("resp error: %v", resp.Error())
+		return res
 	}
 
 	return res
