@@ -2,10 +2,6 @@
 
     Go develop commonly used component library package.
 
-# Package management
-
-    golang1.11+版本，可采用go mod机制管理包,需设置goproxy
-    
 # About package
     
     .
@@ -42,6 +38,7 @@
 
 # Usage
 
+    golang1.11+版本，可采用go mod机制管理包,需设置goproxy
     go version >= 1.13
     设置goproxy代理
     vim ~/.bashrc添加如下内容:
