@@ -32,8 +32,3 @@ type Logger interface {
 	// Fatal 抛出致命错误，然后退出程序
 	Fatal(ctx context.Context, msg string, fields ...interface{})
 }
-
-// LogWriter is a bridge between Logger and any third party logger.
-type LogWriter struct {
-	Logger
-}
