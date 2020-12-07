@@ -8,7 +8,6 @@ require (
 	github.com/go-resty/resty/v2 v2.3.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gomodule/redigo v1.8.3
-	github.com/jinzhu/gorm v1.9.16
 	github.com/nsqio/go-nsq v1.0.8
 	github.com/prometheus/client_golang v1.8.0
 	github.com/satori/go.uuid v1.2.0
@@ -16,5 +15,7 @@ require (
 	go.uber.org/zap v1.16.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.4.0
+	gorm.io/driver/mysql v1.0.3
+	gorm.io/gorm v1.20.8
 	xorm.io/xorm v1.0.5
 )
