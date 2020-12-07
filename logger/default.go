@@ -23,7 +23,7 @@ func Default(opts ...Option) {
 		WithLogDir(DefaultLogDir),       // 日志目录
 		WithLogFilename(DefaultLogFile), // 日志文件名，默认zap.log
 		WithJsonFormat(true),            // json格式化
-		WithCallerSkip(1),               // 如果基于这个Logger包，再包装一次，这个skip = 2,以此类推
+		WithCallerSkip(2),               // 如果基于这个Logger包，再包装一次，这个skip = 2,以此类推
 		WithEnableColor(false),          // 日志是否染色，默认不染色
 		WithLogLevel(zap.DebugLevel),    // 设置日志打印最低级别,如果不设置默认为info级别
 		WithMaxAge(3),                   // 最大保存3天
