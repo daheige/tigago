@@ -68,3 +68,8 @@ func (s *Setting) WatchSettingChange() {
 		})
 	}()
 }
+
+// GetVp 返回viper.Viper指针对象
+func (s *Setting) GetVp() *viper.Viper {
+	return s.vp
+}

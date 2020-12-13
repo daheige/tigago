@@ -3,6 +3,7 @@ package yamlconf
 import (
 	"log"
 	"testing"
+	"time"
 
 	"github.com/daheige/tigago/mysql"
 
@@ -17,9 +18,15 @@ type Data struct {
 func TestYaml(t *testing.T) {
 	conf := NewConf()
 	err := conf.LoadConf("test.yaml")
-	log.Println(conf.data, err)
+	log.Println(conf.GetData(), err)
 
-	log.Println("RedisCommon: ", conf.data["RedisCommon"])
+	data := conf.GetData()
+
+	var graceful time.Duration
+	conf.Get("GracefulWait", &graceful)
+	log.Println("graceful: ", graceful)
+
+	log.Println("RedisCommon: ", data["RedisCommon"])
 
 	// 读取数据到结构体中
 	var redisConf = &Data{}

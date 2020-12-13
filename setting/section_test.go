@@ -33,6 +33,7 @@ func readConfig(configDir string) error {
 	filename := "abc.yaml"
 	log.Println(strings.TrimPrefix(filepath.Ext(filename), ".")) // yaml
 
+	log.Println(filepath.Dir("/abc/app.yaml"))
 	s, err := NewSetting(configDir, "test")
 	if err != nil {
 		return err
