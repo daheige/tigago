@@ -12,7 +12,8 @@ import (
 // Setting setting struct
 type Setting struct {
 	vp        *viper.Viper
-	watchFile bool // 是否监听文件变化
+	watchFile bool                   // 是否监听文件变化
+	sections  map[string]interface{} // 存放key/val配置项
 }
 
 // NewSetting create a setting entry.
@@ -47,7 +48,8 @@ func NewSetting(dir string, filename string, opts ...Option) (*Setting, error) {
 		return nil, err
 	}
 
-	s := &Setting{vp: vp}
+	// 初始化Setting
+	s := &Setting{vp: vp, sections: make(map[string]interface{}, 20)}
 	for _, o := range opts {
 		o(s)
 	}
