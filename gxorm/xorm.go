@@ -55,6 +55,14 @@ type DbConf struct {
 var engineMap = map[string]*xorm.Engine{}
 
 // InitDbEngine new a db engine
+// mysql charset查看
+// mysql> show character set where charset="utf8mb4";
+// +---------+---------------+--------------------+--------+
+// | Charset | Description   | Default collation  | Maxlen |
+// +---------+---------------+--------------------+--------+
+// | utf8mb4 | UTF-8 Unicode | utf8mb4_general_ci |      4 |
+// +---------+---------------+--------------------+--------+
+// 1 row in set (0.00 sec)
 func (conf *DbBaseConf) InitDbEngine() (*xorm.Engine, error) {
 	if conf.Ip == "" {
 		conf.Ip = "127.0.0.1"
@@ -68,8 +76,9 @@ func (conf *DbBaseConf) InitDbEngine() (*xorm.Engine, error) {
 		conf.Charset = "utf8mb4"
 	}
 
+	// 默认字符序，定义了字符的比较规则
 	if conf.Collation == "" {
-		conf.Collation = "utf8mb4_unicode_ci"
+		conf.Collation = "utf8mb4_general_ci"
 	}
 
 	if conf.Loc == "" {
