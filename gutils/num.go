@@ -20,8 +20,6 @@ func RandInt64(min, max int64) int64 {
 		return max
 	}
 
-	// 随机种子
-	rand.Seed(time.Now().UnixNano())
 	return rand.Int63n(max-min) + min
 }
 

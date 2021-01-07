@@ -5,13 +5,14 @@ GracefulWait: 5s
 
 #redis配置
 RedisCommon:
-  Host: 127.0.0.1
-  Port: 6379
-  Password:
-  Database: 0
-  MaxIdle: 3
-  MaxActive: 10
-  IdleTimeout: 120
+  RedisConf:
+    Host: 127.0.0.1
+    Port: 6379
+    Password:
+    Database: 0
+    MaxIdle: 3
+    MaxActive: 10
+    IdleTimeout: 120
   Ip:
     - 11.12.1.1
     - 11.12.1.2

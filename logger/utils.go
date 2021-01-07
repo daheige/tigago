@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 // RndUUID realizes unique uuid based on time ns and random number
 // There is no duplication of uuid on a single machine
 // If you want to generate non-duplicate uuid on a distributed architecture
@@ -36,7 +40,6 @@ func RandInt64(min, max int64) int64 {
 		return max
 	}
 
-	rand.Seed(time.Now().UnixNano())
 	return rand.Int63n(max-min) + min
 }
 

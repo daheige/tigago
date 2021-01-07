@@ -14,6 +14,7 @@ ok      github.com/daheige/tigago/common  24.517s
 func TestUuid(t *testing.T) {
 	for i := 0; i < 1000000; i++ {
 		log.Println("current newuuid", NewUUID())
+		log.Println("current uuid", Uuid())
 	}
 }
 
