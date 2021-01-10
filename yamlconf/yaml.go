@@ -64,6 +64,12 @@ func (c *ConfigEngine) Get(name string, v interface{}) error {
 	return c.s.ReadSection(name, v)
 }
 
+// GetValue get value from vp
+// you can convert it use cast package eg:cast.ToString
+func (c *ConfigEngine) GetValue(key string) interface{} {
+	return c.s.GetVp().Get(key)
+}
+
 // GetString 从配置文件中获取string类型的值
 func (c *ConfigEngine) GetString(name string, defaultValue string) string {
 	if !c.s.IsSet(name) {
@@ -164,6 +170,6 @@ func (c *ConfigEngine) GetFloat32(name string, defaultValue float32) float32 {
 // 这里的struct是你自己定义的根据配置文件
 // s必须是传递结构体的指针
 // name是yaml定义的结构体名称
-func (c *ConfigEngine) GetStruct(name string, s interface{}) interface{} {
+func (c *ConfigEngine) GetStruct(name string, s interface{}) error {
 	return c.s.ReadSection(name, s)
 }
