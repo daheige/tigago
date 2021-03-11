@@ -34,6 +34,13 @@ import (
 // engineMap 每个数据库连接pool就是一个db引擎
 var engineMap = map[string]*gorm.DB{}
 
+var (
+	// EngineNotExist engine not found
+	EngineNotExist = errors.New("current db engine not exist")
+	// EngineNameEmpty engine name is empty
+	EngineNameEmpty = errors.New("current engine name is empty")
+)
+
 // DbConf mysql连接信息
 // parseTime=true changes the output type of DATE and DATETIME
 // values to time.Time instead of []byte / string
@@ -85,11 +92,11 @@ type DbConf struct {
 // SetEngineName 给当前数据库指定engineName
 func (conf *DbConf) SetEngineName(name string) error {
 	if name == "" {
-		return errors.New("current engine name is empty")
+		return EngineNameEmpty
 	}
 
 	if !conf.hasInit {
-		return errors.New("current " + name + " db engine must be InitInstance")
+		return errors.New("current " + name + " db engine no init")
 	}
 
 	conf.engineName = name
@@ -310,7 +317,7 @@ func GetDbObj(name string) (*gorm.DB, error) {
 		return engineMap[name], nil
 	}
 
-	return nil, errors.New("get db obj failed")
+	return nil, EngineNotExist
 }
 
 // CloseAllDb 由于gorm db.Close()是关闭当前连接
@@ -349,5 +356,5 @@ func CloseDbByName(name string) error {
 		delete(engineMap, name) // 销毁连接句柄标识
 	}
 
-	return errors.New("current dbObj not exist")
+	return EngineNotExist
 }

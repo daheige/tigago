@@ -30,7 +30,7 @@ func (myUser) TableName() string {
 	return "user"
 }
 
-func TestGXORM(t *testing.T) {
+func TestXORM(t *testing.T) {
 	var e *xorm.Engine
 	log.Println(e == nil)
 
@@ -132,7 +132,7 @@ func TestGXORM(t *testing.T) {
 
 /**
 $ go test -v
-=== RUN   TestGXORM
+=== RUN   TestXORM
 2019/11/12 21:45:29 true
 2019/11/12 21:45:29 ====master db===
 [xorm] [info]  2019/11/12 21:45:29.633242 [SQL] SELECT `id`, `name`, `age` FROM `user` WHERE (id = ?) LIMIT 1 []interface {}{1} - took: 49.72224ms

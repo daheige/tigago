@@ -4,13 +4,20 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"xorm.io/xorm"
 	xLog "xorm.io/xorm/log"
+)
+
+var (
+	// EngineNotExist engine not found
+	EngineNotExist = errors.New("current db engine not exist")
+	// EngineNameEmpty engine name is empty
+	EngineNameEmpty = errors.New("current engine name is empty")
 )
 
 // DbBaseConf 数据库基本配置
@@ -22,7 +29,7 @@ type DbBaseConf struct {
 	Database  string
 	Charset   string // 字符集 utf8mb4 支持表情符号
 	Collation string // 整理字符集 utf8mb4_unicode_ci
-	ParseTime bool
+	ParseTime bool   // 是否格式化时间
 	Loc       string // 时区字符串 Local,PRC
 
 	Timeout      time.Duration // Dial timeout
@@ -97,7 +104,7 @@ func (conf *DbBaseConf) InitDbEngine() (*xorm.Engine, error) {
 		conf.ReadTimeout = 5 * time.Second
 	}
 
-	// mysql connection time loc.
+	// mysql connection time loc
 	loc, err := time.LoadLocation(conf.Loc)
 	if err != nil {
 		return nil, err
@@ -171,13 +178,13 @@ func (conf *DbConf) NewEngine() (*xorm.Engine, error) {
 // 这样业务上游层，就可以通过 GetEngine(name)获得当前db engine
 func (conf *DbConf) SetEngineName(name string) error {
 	if name == "" {
-		return errors.New("current engineGroup name is empty!")
+		return EngineNameEmpty
 	}
 
 	// 初始化db句柄
 	db, err := conf.NewEngine()
 	if err != nil {
-		return errors.New("current " + name + " db engine init error: " + err.Error())
+		return fmt.Errorf("current %s db engine init error: %s", name, err.Error())
 	}
 
 	engineMap[name] = db
@@ -190,21 +197,21 @@ func (conf *DbConf) ShortConnect() (*xorm.Engine, error) {
 	return conf.NewEngine()
 }
 
-// GetEngineByName 从db pool获取一个数据库连接句柄
+// GetEngineByName 从db engine中获取一个数据库连接句柄
 // 根据数据库连接句柄name获取指定的连接句柄
 func GetEngineByName(name string) (*xorm.Engine, error) {
 	if _, ok := engineMap[name]; ok {
 		return engineMap[name], nil
 	}
 
-	return nil, errors.New("get db obj fail")
+	return nil, EngineNotExist
 }
 
 // CloseAllDb 由于xorm db.Close()是关闭当前连接，一般建议如下函数放在main/init关闭连接就可以
 func CloseAllDb() {
 	for name, db := range engineMap {
 		if err := db.Close(); err != nil {
-			log.Println("close db error: ", err.Error())
+			fmt.Println("close db error: ", err.Error())
 			continue
 		}
 
@@ -216,17 +223,19 @@ func CloseAllDb() {
 func CloseDbByName(name string) error {
 	if _, ok := engineMap[name]; ok {
 		if err := engineMap[name].Close(); err != nil {
-			log.Println("close db error: ", err.Error())
+			fmt.Println("close db error: ", err.Error())
 			return err
 		}
 
 		delete(engineMap, name)
 	}
 
-	return errors.New("current db engine not exist")
+	return EngineNotExist
 }
 
-// ======================读写分离设置==================
+// ======================多个引擎组设置==================
+
+var engineGroupMap = map[string]*xorm.EngineGroup{}
 
 // EngineGroupConf 读写分离引擎配置
 type EngineGroupConf struct {
@@ -251,7 +260,7 @@ type EngineGroupConf struct {
 // NewEngineGroup 创建读写分离的引擎组，附带一些拓展配置
 // 这里可以采用功能模式，方便后面对引擎组句柄进行拓展
 // 默认采用连接池方式建立连接
-func (conf *EngineGroupConf) NewEngineGroup() (*xorm.EngineGroup, error) {
+func (conf *EngineGroupConf) NewEngineGroup(policies ...xorm.GroupPolicy) (*xorm.EngineGroup, error) {
 	master, err := conf.Master.InitDbEngine()
 	if err != nil {
 		return nil, err
@@ -277,13 +286,23 @@ func (conf *EngineGroupConf) NewEngineGroup() (*xorm.EngineGroup, error) {
 	}
 
 	if len(slaveErrs) > 0 {
-		log.Println("init slaves error: ", slaveErrs)
+		fmt.Println("init slaves error: ", slaveErrs)
 
-		return nil, errors.New("init slaves fail")
+		errMsgSlice := make([]string, 0, len(slaveErrs))
+		for _, sErr := range slaveErrs {
+			errMsgSlice = append(errMsgSlice, sErr.Error())
+		}
+
+		return nil, errors.New("init slaves error: " + strings.Join(errMsgSlice, " "))
 	}
 
 	var eg *xorm.EngineGroup
-	eg, err = xorm.NewEngineGroup(master, slaves)
+	if len(policies) > 0 {
+		eg, err = xorm.NewEngineGroup(master, slaves, policies...)
+	} else {
+		eg, err = xorm.NewEngineGroup(master, slaves)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -311,4 +330,65 @@ func (conf *EngineGroupConf) NewEngineGroup() (*xorm.EngineGroup, error) {
 	}
 
 	return eg, nil
+}
+
+// SetEngineGroupName 给db engine group设置名字
+func (conf *EngineGroupConf) SetEngineGroupName(name string, policies ...xorm.GroupPolicy) error {
+	if name == "" {
+		return EngineNameEmpty
+	}
+
+	// 初始化db句柄
+	var eg *xorm.EngineGroup
+	var err error
+	if len(policies) > 0 {
+		eg, err = conf.NewEngineGroup(policies...)
+	} else {
+		eg, err = conf.NewEngineGroup()
+	}
+
+	if err != nil {
+		return fmt.Errorf("current %s db engine group init error: %s", name, err.Error())
+	}
+
+	engineGroupMap[name] = eg
+
+	return nil
+}
+
+//======================引擎组辅助方法================
+
+// CloseAllEngineGroup 关闭当前引擎组连接，一般建议如下函数放在main/init关闭连接就可以
+func CloseAllEngineGroup() {
+	for name, db := range engineGroupMap {
+		if err := db.Close(); err != nil {
+			fmt.Println("close all db engine group error: ", err.Error())
+			continue
+		}
+
+		delete(engineGroupMap, name) // 销毁连接句柄标识
+	}
+}
+
+// CloseEngineGroupByName 关闭指定name的db engine group
+func CloseEngineGroupByName(name string) error {
+	if _, ok := engineGroupMap[name]; ok {
+		if err := engineGroupMap[name].Close(); err != nil {
+			fmt.Println("close db engine group error: ", err.Error())
+			return err
+		}
+
+		delete(engineGroupMap, name)
+	}
+
+	return EngineNotExist
+}
+
+// GetEngineGroupName 从引擎组中获得一个db engine group
+func GetEngineGroupName(name string) (*xorm.EngineGroup, error) {
+	if _, ok := engineGroupMap[name]; ok {
+		return engineGroupMap[name], nil
+	}
+
+	return nil, EngineNotExist
 }
