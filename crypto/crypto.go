@@ -18,8 +18,15 @@ import (
 	"time"
 )
 
-// randStr 用于生成随机字符串
-var randStr = "0123456789abcdef"
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+// randStrBytes 用于生成随机字符串
+var (
+	randBytes   = []byte("0123456789abcdef")
+	randByteLen = len(randBytes)
+)
 
 // Md5 md5 string
 func Md5(str string) string {
@@ -70,14 +77,11 @@ func HmacSha1(str string, key string) string {
 	return hex.EncodeToString(mac.Sum(nil))
 }
 
-// GetIteratorStr 得到指定16进制的数字
+// GetIteratorStr 得到指定16进制的随机字符串
 func GetIteratorStr(length int) string {
-	b := []byte(randStr)
-	bLen := len(b)
-	res := make([]byte, 0, length+1)
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	res := make([]byte, 0, length)
 	for i := 0; i < length; i++ {
-		res = append(res, b[r.Intn(bLen)])
+		res = append(res, randBytes[rand.Intn(randByteLen)])
 	}
 
 	return string(res)

@@ -24,9 +24,8 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/google/uuid"
-
 	"github.com/daheige/tigago/crypto"
+	"github.com/google/uuid"
 )
 
 func init() {
@@ -431,11 +430,11 @@ func Strtolower(str string) string {
 // StrShuffle str_shuffle(str)
 func StrShuffle(str string) string {
 	runes := []rune(str)
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	s := make([]rune, len(runes))
-	for i, v := range r.Perm(len(runes)) {
+	for i, v := range rand.Perm(len(runes)) {
 		s[i] = runes[v]
 	}
+
 	return string(s)
 }
 

@@ -22,6 +22,18 @@ func TestSha256(t *testing.T) {
 	t.Log(Sha256("123456"))
 }
 
+// === RUN   TestGetIteratorStr
+// 2021/03/11 22:55:01 current str:  64d8f7
+// 2021/03/11 22:55:01 current str:  24f978
+// 2021/03/11 22:55:01 current str:  249097
+// --- PASS: TestGetIteratorStr (0.00s)
+// PASS
+func TestGetIteratorStr(t *testing.T) {
+	for i := 0; i < 1000; i++ {
+		log.Println("current str: ", GetIteratorStr(6))
+	}
+}
+
 var k = GetIteratorStr(16)
 var iv = GetIteratorStr(16)
 

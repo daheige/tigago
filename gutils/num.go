@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 // Round 对浮点数进行四舍五入操作比如 12.125保留2位小数==>12.13
 func Round(f float64, n int) float64 {
 	n10 := math.Pow10(n)
@@ -44,8 +48,7 @@ func Rand(min, max int) int {
 		return min
 	}
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return r.Intn(max+1-min) + min
+	return rand.Intn(max+1-min) + min
 }
 
 // Floor 产生一个向下取整的数字，对应php floor(num)
