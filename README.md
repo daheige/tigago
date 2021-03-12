@@ -25,7 +25,7 @@
     ├── monitor             基于prometheus二次开发、封装的一些函数，主要用于http/job/grpc服务性能监控
     ├── mutexlock           基于sync.Mutex基础上拓展的乐观锁
     ├── mysql               基于go gorm库封装而成的mysql客户端的一些辅助函数
-    ├── mytest              thinkgo 一些单元测试
+    ├── mytest              tigago 一些单元测试
     ├── redislock           基于redigo实现的redis+lua分布式锁实现
     ├── runner              runner用于按照顺序，执行程序任务操作，可作为cron作业或定时任务
     ├── sem                 指定数量的空结构体缓存通道，实现信息号实现互斥锁

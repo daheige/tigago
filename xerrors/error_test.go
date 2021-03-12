@@ -24,5 +24,5 @@ func TestError(t *testing.T) {
 2019/04/01 23:42:10 str: this is a error
 --- PASS: TestError (0.00s)
 PASS
-ok  	github.com/daheige/thinkgo/xerrors	0.003
+ok  	github.com/daheige/tigago/xerrors	0.003
 */

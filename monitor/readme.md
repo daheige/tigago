@@ -43,4 +43,4 @@
 
 # 实战案例
 
-    https://github.com/daheige/hg-mux
+    https://github.com/daheige/goapp

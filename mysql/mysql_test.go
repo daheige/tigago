@@ -150,14 +150,14 @@ func TestShortConnect(t *testing.T) {
 2019/07/20 20:14:51 test success
 --- PASS: TestGorm (0.38s)
 PASS
-ok      github.com/daheige/thinkgo/mysql        0.388s
+ok      github.com/daheige/tigago/mysql        0.388s
 
 采用短连接方式测试
 $ go test -v -test.run TestShortConnect
 2019/07/20 20:16:23 test success
 --- PASS: TestShortConnect (1.22s)
 PASS
-ok      github.com/daheige/thinkgo/mysql        1.229s
+ok      github.com/daheige/tigago/mysql        1.229s
 
 当我们把maxConnections 调到2000后
 $ go test -v -test.run TestShortConnect
