@@ -8,7 +8,6 @@
     ├── chanlock            chan实现trylock乐观锁
     ├── crypto              常见的md5,sha1,sha1file,aes/des,ecb,openssl_encrypt实现
     ├── def                 为兼容php其他语言而定义的空数组，空对象
-    ├── glog                基于mutex乐观锁实现的每天流动式日志，将日志内容直接落地到文件中
     ├── gnsq                go-nsq基本操作封装
     ├── goredis             基于go-redis/redis封装的redis客户端使用函数（支持cluster集群）
     ├── gpprof              pprof性能分析监控封装
