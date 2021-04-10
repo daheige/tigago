@@ -100,7 +100,7 @@ func defaultZapLogEntry() *zapLogWriter {
 		maxSize:     512,
 		compress:    false,
 		logLevel:    zapcore.InfoLevel,
-		logFilename: "zap.log",
+		logFilename: filepath.Base(os.Args[0]), // 默认程序运行时名称
 		logDir:      os.TempDir(),
 		jsonFormat:  true,
 		hostname:    defaultHostName,
@@ -254,6 +254,10 @@ func (z *zapLogWriter) initCore() (zapcore.Core, error) {
 		encoderConf.EncodeLevel = zapcore.LowercaseLevelEncoder // 小写编码器
 	}
 
+	if z.logFilename == "" {
+		z.logFilename = filepath.Base(os.Args[0])
+	}
+
 	if z.logDir == "" {
 		z.logFilename = filepath.Join(os.TempDir(), z.logFilename) // 默认日志文件名称
 	} else {
@@ -261,10 +265,6 @@ func (z *zapLogWriter) initCore() (zapcore.Core, error) {
 			if err := os.MkdirAll(z.logDir, 0755); err != nil {
 				return nil, err
 			}
-		}
-
-		if z.logFilename == "" {
-			z.logFilename = filepath.Base(os.Args[0])
 		}
 
 		z.logFilename = filepath.Join(z.logDir, z.logFilename)
