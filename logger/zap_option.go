@@ -93,13 +93,6 @@ func WithStdout(b bool) Option {
 	}
 }
 
-// WithEnableCatchStack 当出现panic的时候，在使用Panic记录日志是否捕获stack信息
-func WithEnableCatchStack(b bool) Option {
-	return func(z *zapLogWriter) {
-		z.enableCatchStack = b
-	}
-}
-
 // WithEnableColor 是否日志染色
 func WithEnableColor(b bool) Option {
 	return func(z *zapLogWriter) {

@@ -2,6 +2,7 @@ package logger
 
 import (
 	"context"
+	"runtime/debug"
 
 	"go.uber.org/zap"
 )
@@ -29,7 +30,6 @@ func Default(opts ...Option) {
 		WithMaxAge(3),                   // 最大保存3天
 		WithMaxSize(200),                // 每个日志文件最大20MB
 		WithCompress(false),             // 日志不压缩
-		WithEnableCatchStack(true),      // 当使用Panic方法时候是否记录stack信息
 	}
 
 	if len(opts) > 0 {
@@ -67,7 +67,14 @@ func DPanic(ctx context.Context, msg string, fields ...interface{}) {
 // Recover 用来捕获程序运行出现的panic信息，并记录到日志中
 // 这个panic信息，将采用 DPanic 方法进行记录
 func Recover(ctx context.Context, msg string, fields ...interface{}) {
-	logEntry.Recover(ctx, msg, fields...)
+	if err := recover(); err != nil {
+		if len(fields) == 0 {
+			fields = make([]interface{}, 0, 2)
+		}
+
+		fields = append(fields, Fullstack.String(), string(debug.Stack()))
+		logEntry.DPanic(ctx, msg, fields...)
+	}
 }
 
 // Panic 抛出panic的时候，先记录日志，然后执行panic,退出当前goroutine

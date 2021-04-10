@@ -26,7 +26,6 @@ func TestLogger(t *testing.T) {
 		WithMaxSize(20),
 		WithCompress(false),
 		WithHostname("myapp.com"),
-		WithEnableCatchStack(true), // 当使用Panic方法时候是否记录stack信息
 	)
 
 	// reqId := RndUUID()
@@ -79,7 +78,6 @@ func TestNewLogSugar(t *testing.T) {
 		WithMaxSize(20),
 		WithCompress(false),
 		WithHostname("myapp.com"),
-		WithEnableCatchStack(true), // 当使用Panic方法时候是否记录stack信息)
 	)
 
 	logSugar.Info("abc", 123, "info", "sugar hello")
@@ -114,7 +112,6 @@ func BenchmarkNew(b *testing.B) {
 		WithMaxSize(20),
 		WithCompress(false),
 		// WithHostname("myapp.com"),
-		WithEnableCatchStack(true), // 当使用Panic方法时候是否记录stack信息
 	)
 
 	// reqId := RndUUID()

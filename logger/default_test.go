@@ -22,7 +22,6 @@ func TestDefaultLogEntry(t *testing.T) {
 		WithMaxSize(20),                // 每个日志文件最大20MB
 		WithCompress(false),            // 日志不压缩
 		WithHostname("myapp.com"),      // 设置hostname
-		WithEnableCatchStack(true),     // 当使用Panic方法时候是否记录stack信息
 	}
 
 	// 生成默认的日志句柄对象

@@ -141,14 +141,11 @@ func (z *zapLogWriter) DPanic(ctx context.Context, msg string, fields ...interfa
 // 这个panic信息，将采用 zap.DPanic 方法进行记录,程序继续运行，不退出
 func (z *zapLogWriter) Recover(ctx context.Context, msg string, fields ...interface{}) {
 	if err := recover(); err != nil {
-		if z.enableCatchStack {
-			if len(fields) == 0 {
-				fields = make([]interface{}, 0, 2)
-			}
-
-			fields = append(fields, Fullstack.String(), string(debug.Stack()))
+		if len(fields) == 0 {
+			fields = make([]interface{}, 0, 2)
 		}
 
+		fields = append(fields, Fullstack.String(), string(debug.Stack()))
 		z.DPanic(ctx, msg, fields...)
 	}
 }
