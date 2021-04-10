@@ -38,9 +38,6 @@ type zapLogWriter struct {
 	jsonFormat  bool          // 是否json格式化
 	stdout      bool          // 是否输出到终端
 
-	// 当出现panic的时候，在使用Panic记录日志是否捕获stack信息
-	enableCatchStack bool
-
 	// 日志是否染色
 	// For example, InfoLevel is serialized to "info" and colored blue.
 	enableColor bool
@@ -264,6 +261,10 @@ func (z *zapLogWriter) initCore() (zapcore.Core, error) {
 			if err := os.MkdirAll(z.logDir, 0755); err != nil {
 				return nil, err
 			}
+		}
+
+		if z.logFilename == "" {
+			z.logFilename = filepath.Base(os.Args[0])
 		}
 
 		z.logFilename = filepath.Join(z.logDir, z.logFilename)
