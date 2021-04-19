@@ -28,7 +28,6 @@ func main() {
 		logger.WithMaxSize(20),              // 每个日志文件最大20MB
 		logger.WithCompress(false),          // 日志不压缩
 		logger.WithHostname("myapp.com"),    // 设置hostname
-		logger.WithEnableCatchStack(true),   // 当使用Panic方法时候是否记录stack信息
 	)
 
 	// 模拟请求id
