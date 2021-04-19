@@ -15,7 +15,7 @@ var (
 	DefaultLogDir = "./logs"
 
 	// DefaultLogFile default log file.
-	DefaultLogFile = "zap.log"
+	DefaultLogFile = "go-app.log"
 )
 
 // Default 默认zap logger对象
@@ -30,6 +30,8 @@ func Default(opts ...Option) {
 		WithMaxAge(3),                   // 最大保存3天
 		WithMaxSize(200),                // 每个日志文件最大20MB
 		WithCompress(false),             // 日志不压缩
+		WithStdout(false),               // 日志不输出到终端，可用opts方式改变stdout的值
+		WriteToFile(true),               // 默认开启日志写入文件中
 	}
 
 	if len(opts) > 0 {

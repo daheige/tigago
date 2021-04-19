@@ -4,9 +4,10 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// Option option for zapLogWriter
 type Option func(z *zapLogWriter)
 
-// apply add option for zapLogWriter.
+// apply add option for zapLogWriter
 func (z *zapLogWriter) apply(opts ...Option) {
 	for _, o := range opts {
 		o(z)
@@ -62,6 +63,13 @@ func WithCallerSkip(skip int) Option {
 func WithLogLevel(level zapcore.Level) Option {
 	return func(z *zapLogWriter) {
 		z.logLevel = level
+	}
+}
+
+// WriteToFile 设置日志是否写入文件中
+func WriteToFile(b bool) Option {
+	return func(z *zapLogWriter) {
+		z.logWriteToFile = b
 	}
 }
 

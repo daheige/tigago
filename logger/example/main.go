@@ -27,8 +27,9 @@ func main() {
 		logger.WithMaxAge(3),                // 最大保存3天
 		logger.WithMaxSize(20),              // 每个日志文件最大20MB
 		logger.WithCompress(false),          // 日志不压缩
-		logger.WithHostname("myapp.com"),    // 设置hostname
-		logger.WithEnableCatchStack(true),   // 当使用Panic方法时候是否记录stack信息
+		// logger.WithHostname("myapp.com"),    // 设置hostname
+		logger.WriteToFile(true), // 日志写入文件中
+		logger.WithStdout(false), // 关闭日志写入终端
 	)
 
 	// 模拟请求id

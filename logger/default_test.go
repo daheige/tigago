@@ -21,7 +21,8 @@ func TestDefaultLogEntry(t *testing.T) {
 		WithMaxAge(3),                  // 最大保存3天
 		WithMaxSize(20),                // 每个日志文件最大20MB
 		WithCompress(false),            // 日志不压缩
-		WithHostname("myapp.com"),      // 设置hostname
+		WithStdout(false),              // 关闭终端输出
+		// WithHostname("myapp.com"),      // 设置hostname
 	}
 
 	// 生成默认的日志句柄对象

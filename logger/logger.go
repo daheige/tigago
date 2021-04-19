@@ -1,3 +1,4 @@
+// Package logger for log interface
 package logger
 
 import (
