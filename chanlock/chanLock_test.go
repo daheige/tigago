@@ -2,32 +2,63 @@ package chanlock
 
 import (
 	"log"
-	"runtime"
 	"sync"
 	"testing"
+	"time"
 )
 
 var count = 1
 
 func TestChanLock(t *testing.T) {
-	log.Println("fefe")
+	log.Println("hello")
 
 	var wg sync.WaitGroup
 
-	//抢占式的更新count，需要对count进行枷锁保护
-	//如果不加锁，count每次执行后，值都不一样
+	// 抢占式的更新count，需要对count进行枷锁保护
+	// 如果不加锁，count每次执行后，值都不一样
 	chLock := NewChanLock()
 
 	nums := 1000
-	wg.Add(nums) //建议一次性实现计数
+	wg.Add(nums) // 建议一次性实现计数
 	for i := 0; i < nums; i++ {
-		runtime.Gosched() //让出当前cpu给其他goroutine执行
-
 		go func() {
 			defer wg.Done()
+
 			chLock.Lock()
 			defer chLock.Unlock()
 
+			v := count
+			log.Println("current count: ", v)
+			v++
+			count = v
+		}()
+	}
+
+	log.Println("exec running....")
+	wg.Wait()
+
+	log.Println("count: ", count)
+}
+
+func TestTryLock(t *testing.T) {
+	nums := 100
+	var wg sync.WaitGroup
+	wg.Add(nums) // 建议一次性实现计数
+	chLock := NewChanLock()
+
+	for i := 0; i < nums; i++ {
+		go func() {
+			defer wg.Done()
+
+			if !chLock.TryLock() {
+				log.Println("try lock fail")
+				return
+			}
+
+			defer chLock.Unlock()
+			log.Println("lock success")
+
+			time.Sleep(2 * time.Millisecond)
 			v := count
 			log.Println("current count: ", v)
 			v++

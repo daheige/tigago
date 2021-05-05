@@ -1,9 +1,12 @@
-// chan实现trylock乐观锁
+// Package chanlock 基于chan实现trylock乐观锁
 package chanlock
 
 import (
 	"time"
 )
+
+// DefaultLockTimeout 默认加锁超时时间20ms就认为加锁失败
+var DefaultLockTimeout = 10 * time.Millisecond
 
 // ChanLock chan lock
 type ChanLock struct {
@@ -17,7 +20,7 @@ func NewChanLock() *ChanLock {
 	}
 }
 
-// Lock 通道枷锁
+// Lock 通道加锁,如果无法放入ch，该方法就会阻塞，直到ch通道锁释放为止
 func (l *ChanLock) Lock() {
 	l.ch <- struct{}{} // 这里是一个空结构体
 }
@@ -28,23 +31,29 @@ func (l *ChanLock) Unlock() {
 }
 
 // TryLock 乐观锁实现
-func (l *ChanLock) TryLock() bool {
-	select {
-	case l.ch <- struct{}{}:
-		return true
-	default:
+func (l *ChanLock) TryLock(timeout ...time.Duration) bool {
+	if len(timeout) > 0 && timeout[0] > 0 {
+		return l.tryLockTimeout(timeout[0])
 	}
 
-	return false
+	return l.tryLockTimeout(DefaultLockTimeout)
 }
 
 // TryLockTimeout 指定时间内的乐观锁
-func (l *ChanLock) TryLockTimeout(timeout time.Duration) bool {
-	t := time.After(timeout)
-	select {
-	case l.ch <- struct{}{}:
-		return true
-	case <-t:
-		return false // timeout
+func (l *ChanLock) tryLockTimeout(timeout time.Duration) bool {
+	if timeout == 0 {
+		timeout = DefaultLockTimeout
+	}
+
+	ticker := time.NewTicker(timeout)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case l.ch <- struct{}{}:
+			return true
+		case <-ticker.C:
+			return false
+		}
 	}
 }
