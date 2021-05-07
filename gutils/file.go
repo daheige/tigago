@@ -356,7 +356,7 @@ func Fgetcsv(handle *os.File, delimiter rune, size ...int64) ([][]string, error)
 			}
 
 			if err != nil && err != io.EOF {
-				return records, fmt.Errorf("can not read, err is %v", err.Error())
+				return records, fmt.Errorf("can not read, err is %s", err.Error())
 			}
 
 			records = append(records, row)
@@ -372,7 +372,6 @@ func Fgetcsv(handle *os.File, delimiter rune, size ...int64) ([][]string, error)
 // if there is no matching file. The syntax of patterns is the same
 // as in Match. The pattern may describe hierarchical names such as
 // /usr/*/bin/ed (assuming the Separator is '/').
-//
 // Glob ignores file system errors such as I/O errors reading directories.
 // The only possible returned error is ErrBadPattern, when pattern
 // is malformed.

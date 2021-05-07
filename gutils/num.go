@@ -5,12 +5,7 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
-	"time"
 )
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 // Round 对浮点数进行四舍五入操作比如 12.125保留2位小数==>12.13
 func Round(f float64, n int) float64 {

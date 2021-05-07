@@ -14,7 +14,7 @@ func TestPool(t *testing.T) {
 	})
 
 	p := NewPool(
-		WithExecInterval(100*time.Millisecond),
+		WithExecInterval(10*time.Millisecond),
 		WithEntryCap(10), WithJobCap(10), WithWorkerCap(10),
 		WithLogger(log.New(os.Stderr, "", log.LstdFlags)),
 	)
