@@ -77,5 +77,5 @@ func TestTryLock(t *testing.T) {
 2019/11/27 21:59:50 count:  1001
 --- PASS: Test_chanLock (0.03s)
 PASS
-ok      github.com/daheige/tigago/chanlock     0.034s
+ok
 */

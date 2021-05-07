@@ -60,5 +60,5 @@ OK <nil>
 2021/05/01 21:52:21 exec success...
 --- PASS: TestRedisPool (1.16s)
 PASS
-ok  	github.com/go-god/gredigo	1.178s
+ok
 */
