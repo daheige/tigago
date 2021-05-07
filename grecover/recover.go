@@ -10,28 +10,25 @@ type Logger interface {
 	Println(args ...interface{})
 }
 
-// LoggerFunc is a bridge between Logger and any third party logger.
+// LoggerFunc is a bridge between Logger and any third party logger
 type LoggerFunc func(msg ...interface{})
 
 // Println implements Logger interface.
 func (f LoggerFunc) Println(args ...interface{}) { f(args...) }
 
-// dummy logger writes nothing.
-var dummyLogger = LoggerFunc(func(...interface{}) {})
-
-// LogEntry log entry.
 var (
-	LogEntry   Logger = dummyLogger
-	TracePanic        = false // trace panic stack
+	// dummy logger writes nothing
+	dummyLogger = LoggerFunc(func(...interface{}) {})
+
+	// LogEntry log entry
+	LogEntry Logger = dummyLogger
 )
 
 // CheckPanic check panic when exit
 func CheckPanic() {
 	if err := recover(); err != nil {
 		LogEntry.Println("panic error: ", err)
-		if TracePanic {
-			LogEntry.Println(string(CatchStack()))
-		}
+		LogEntry.Println("full stack: ", string(CatchStack()))
 	}
 }
 

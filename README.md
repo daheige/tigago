@@ -11,11 +11,9 @@
     ├── gnsq                go-nsq基本操作封装
     ├── goredis             基于go-redis/redis封装的redis客户端使用函数（支持cluster集群）
     ├── gpprof              pprof性能分析监控封装
-    ├── gqueue              通过指定goroutine个数,实现task queue执行器
     ├── grecover            golang panic/recover捕获堆栈信息实现
     ├── gredigo             基于redigo封装而成的go redis辅助函数，方便快速接入redis操作
     ├── gresty              go http client support get,post,delete,patch,put,head,file method
-    ├── gtask               golang task在独立协程中调度实现
     ├── gtime               time相关的一些辅助函数
     ├── gutils              file,num,str字符串相关的一些辅助函数,比如Uuid,HTMLSpecialchars,Uniqid等php函数实现
     ├── gxorm               golang xorm客户端简单封装，方便使用

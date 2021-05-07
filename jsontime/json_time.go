@@ -14,7 +14,7 @@ type Time time.Time
 var NullToEmptyStr bool
 
 const (
-	// TmFormat time format layout.
+	// TmFormat time format layout
 	TmFormat = "2006-01-02 15:04:05"
 )
 
