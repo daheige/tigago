@@ -1,4 +1,4 @@
-/**Package of xerrors
+/**Package xerrors
 自定义错误类型，一般用在api/微服务等业务逻辑中，处理错误
 支持是否输出堆栈信息，可以把stack信息记录到日志文件中，方便定位问题
 */

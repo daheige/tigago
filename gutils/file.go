@@ -1,4 +1,4 @@
-// file 文件相关的一些辅助函数
+// Package gutils file 文件相关的一些辅助函数
 package gutils
 
 import (
