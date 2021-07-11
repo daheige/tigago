@@ -368,6 +368,34 @@ func Fgetcsv(handle *os.File, delimiter rune, size ...int64) ([][]string, error)
 	return reader.ReadAll()
 }
 
+// Fputcsv 将内容写入csv文件中
+func Fputcsv(filename string, fields [][]string, utf8Bom ...bool) error {
+	file, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR, 0644)
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
+	if len(utf8Bom) > 0 && utf8Bom[0] {
+		// 写入UTF-8 BOM，防止中文乱码
+		file.WriteString("\xEF\xBB\xBF")
+	}
+
+	w := csv.NewWriter(file)
+	for k := range fields {
+		err = w.Write(fields[k])
+		if err != nil {
+			return err
+		}
+	}
+
+	// 写文件需要flush，不然缓存满了，后面的就写不进去了，只会写一部分
+	w.Flush()
+
+	return nil
+}
+
 // Glob returns the names of all files matching pattern or nil
 // if there is no matching file. The syntax of patterns is the same
 // as in Match. The pattern may describe hierarchical names such as
