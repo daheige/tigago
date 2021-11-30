@@ -36,8 +36,8 @@ func TestGorm(t *testing.T) {
 		User:         "root",
 		Password:     "root1234",
 		Database:     "test",
-		MaxIdleConns: 10,
-		MaxOpenConns: 100,
+		MaxIdleConns: 20,
+		MaxOpenConns: 200,
 		ParseTime:    true,
 		ShowSql:      true,
 	}

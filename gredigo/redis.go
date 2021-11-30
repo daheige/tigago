@@ -1,6 +1,8 @@
 package gredigo
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -30,16 +32,80 @@ type RedisConf struct {
 	MaxConnLifetime int // 连接最大生命周期,单位s，默认1800s
 }
 
-var RedisPoolList = map[string]*redis.Pool{} // 存放连接池信息
+// RedisPoolList 存放连接池信息
+var RedisPoolList = map[string]*redis.Pool{}
+
+var (
+	// ErrRedisConnectionNotFound redis connection not found
+	ErrRedisConnectionNotFound = errors.New("redis connection not found")
+
+	// ErrRedisConnectionInvalid redis connection invalid
+	ErrRedisConnectionInvalid = errors.New("redis connection invalid")
+)
 
 // GetRedisClient 通过指定name获取池子中的redis连接句柄
-func GetRedisClient(name string) redis.Conn {
-	if value, ok := RedisPoolList[name]; ok {
-		return value.Get()
+func GetRedisClient(name string, timeoutCtx ...context.Context) redis.Conn {
+	var ctx context.Context
+	if len(timeoutCtx) > 0 && timeoutCtx[0] != nil {
+		ctx = timeoutCtx[0]
+	} else {
+		ctx = context.Background()
 	}
 
-	return nil
+	activeConn, err := getRedisConn(name, ctx)
+	if err != nil {
+		return ErrorConn{err}
+	}
+
+	return activeConn
 }
+
+// GetRedisClientWithTimeout return redis.ConnWithTimeout
+// you can use DoWithTimeout method.
+func GetRedisClientWithTimeout(name string, ctx context.Context) redis.ConnWithTimeout {
+	pool, ok := RedisPoolList[name]
+	if !ok {
+		return ErrorConn{ErrRedisConnectionNotFound}
+	}
+
+	activeConn, err := pool.GetContext(ctx)
+	if err != nil {
+		return ErrorConn{err}
+	}
+
+	conn, ok := activeConn.(redis.ConnWithTimeout)
+	if ok {
+		return conn
+	}
+
+	return ErrorConn{ErrRedisConnectionInvalid}
+}
+
+func getRedisConn(name string, ctx context.Context) (redis.Conn, error) {
+	pool, ok := RedisPoolList[name]
+	if !ok {
+		return nil, ErrRedisConnectionNotFound
+	}
+
+	return pool.GetContext(ctx)
+}
+
+// 接口静态检测是否实现了redis.Conn
+var _ redis.Conn = (*ErrorConn)(nil)
+
+// ErrorConn error connection impl redis.Conn and redis.ConnWithTimeout
+type ErrorConn struct{ err error }
+
+func (ec ErrorConn) Do(string, ...interface{}) (interface{}, error) { return nil, ec.err }
+func (ec ErrorConn) DoWithTimeout(time.Duration, string, ...interface{}) (interface{}, error) {
+	return nil, ec.err
+}
+func (ec ErrorConn) Send(string, ...interface{}) error                     { return ec.err }
+func (ec ErrorConn) Err() error                                            { return ec.err }
+func (ec ErrorConn) Close() error                                          { return nil }
+func (ec ErrorConn) Flush() error                                          { return ec.err }
+func (ec ErrorConn) Receive() (interface{}, error)                         { return nil, ec.err }
+func (ec ErrorConn) ReceiveWithTimeout(time.Duration) (interface{}, error) { return nil, ec.err }
 
 // AddRedisPool 添加新的redis连接池
 func AddRedisPool(name string, conf *RedisConf) {
