@@ -10,17 +10,23 @@ import (
 )
 
 // RedisConf redis连接信息
-// redigo实现集群参考： go get github.com/chasex/redis-go-cluster
+// 假如redigo要实现集群参考： redis-go-cluster
 type RedisConf struct {
-	Host           string
-	Port           int
-	Password       string
-	Database       int
-	MaxIdle        int // 空闲pool个数
-	MaxActive      int // 最大激活数量
+	Host     string
+	Port     int
+	Password string
+	Database int
+
+	// MaxIdle Maximum number of idle connections in the pool.
+	MaxIdle int // 空闲连接的最大数量
+
+	// MaxActive Maximum number of connections allocated by the pool at a given time.
+	// When zero, there is no limit on the number of connections in the pool.
+	MaxActive int // 最大激活数量
+
 	ConnectTimeout int // 连接超时，单位s
-	ReadTimeout    int // 读取超时
-	WriteTimeout   int // 写入超时
+	ReadTimeout    int // 读取超时，单位s
+	WriteTimeout   int // 写入超时，单位s
 
 	// Close connections after remaining idle for this duration. If the value
 	// is zero, then idle connections are not closed. Applications should set
@@ -117,6 +123,26 @@ func (r *RedisConf) SetRedisPool(name string) {
 	AddRedisPool(name, r)
 }
 
+// ClosePoolByName 通过name释放连接池
+func ClosePoolByName(name string) error {
+	pool, ok := RedisPoolList[name]
+	if !ok {
+		return ErrRedisConnectionNotFound
+	}
+
+	return pool.Close()
+}
+
+// CloseAllPool 释放所有的连接池，返回map[name]error
+func CloseAllPool() map[string]error {
+	m := make(map[string]error, len(RedisPoolList))
+	for name, pool := range RedisPoolList {
+		m[name] = pool.Close()
+	}
+
+	return m
+}
+
 // NewRedisPool 创建redis pool连接池
 // If Wait is true and the pool is at the MaxActive limit, then Get() waits
 // for a connection to be returned to the pool before returning.
@@ -181,6 +207,7 @@ func NewRedisPool(conf *RedisConf) *redis.Pool {
 			if time.Since(t) < time.Minute {
 				return nil
 			}
+
 			_, err := c.Do("PING")
 			return err
 		},

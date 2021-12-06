@@ -15,19 +15,25 @@ func TestRedisPool(t *testing.T) {
 	conf := &RedisConf{
 		Host:        "127.0.0.1",
 		Port:        6379,
-		MaxIdle:     100,
+		MaxIdle:     60,
 		MaxActive:   200,
 		IdleTimeout: 240,
 	}
 
 	// 建立连接
 	conf.SetRedisPool("default")
+	defer func() {
+		m := CloseAllPool()
+		log.Println("close all pool,result: ", m)
+	}()
+
 	var wg sync.WaitGroup
 
-	for i := 0; i < 20000; i++ {
+	for i := 0; i < 120; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
+
 			client := GetRedisClient("default")
 			defer client.Close()
 
