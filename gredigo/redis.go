@@ -130,6 +130,8 @@ func ClosePoolByName(name string) error {
 		return ErrRedisConnectionNotFound
 	}
 
+	delete(RedisPoolList, name)
+
 	return pool.Close()
 }
 
@@ -138,6 +140,7 @@ func CloseAllPool() map[string]error {
 	m := make(map[string]error, len(RedisPoolList))
 	for name, pool := range RedisPoolList {
 		m[name] = pool.Close()
+		delete(RedisPoolList, name)
 	}
 
 	return m
