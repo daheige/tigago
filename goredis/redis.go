@@ -8,12 +8,10 @@ import (
 	"github.com/go-redis/redis"
 )
 
-// a redis client list
+// RedisClientList a redis client list
 var RedisClientList = map[string]*redis.Client{}
 
-var HashDefaultExpire int64 = 300 // 默认过期时间300s
-
-// redis client config
+// RedisClientConf redis client config
 type RedisClientConf struct {
 	// host:port address.
 	Address string
@@ -66,7 +64,7 @@ type RedisClientConf struct {
 	MaxConnAge time.Duration
 }
 
-// redis cluster config
+// RedisClusterConf redis cluster config
 type RedisClusterConf struct {
 	// A seed list of host:port addresses of cluster nodes.
 	AddressNodes []string
@@ -182,15 +180,16 @@ func GetJson(client *redis.Client, key string, data interface{}) error {
 	}
 
 	err = json.Unmarshal([]byte(str), data)
-	if err != nil {
-		return err
-	}
+	return err
+}
 
-	return nil
+// GetCluster get cluster client v1 version
+func (conf *RedisClusterConf) GetCluster() *redis.ClusterClient {
+	return conf.GetClusterClient()
 }
 
 // GetCluster return redis cluster client
-func (conf *RedisClusterConf) GetCluster() *redis.ClusterClient {
+func (conf *RedisClusterConf) GetClusterClient() *redis.ClusterClient {
 	if conf.MaxConnAge == 0 {
 		conf.MaxConnAge = 30 * 60 * time.Second
 	}
@@ -207,7 +206,7 @@ func (conf *RedisClusterConf) GetCluster() *redis.ClusterClient {
 		conf.ReadTimeout = 3 * time.Second
 	}
 
-	cluster := redis.NewClusterClient(&redis.ClusterOptions{
+	clusterClient := redis.NewClusterClient(&redis.ClusterOptions{
 		Addrs:        conf.AddressNodes,
 		Password:     conf.Password,
 		PoolSize:     conf.PoolSize,
@@ -221,5 +220,5 @@ func (conf *RedisClusterConf) GetCluster() *redis.ClusterClient {
 		MaxConnAge:   conf.MaxConnAge,
 	})
 
-	return cluster
+	return clusterClient
 }

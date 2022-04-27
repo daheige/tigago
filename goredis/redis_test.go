@@ -8,9 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-redis/redis"
-
 	"github.com/daheige/tigago/chanlock"
+	"github.com/go-redis/redis"
 )
 
 func TestRedis(t *testing.T) {
