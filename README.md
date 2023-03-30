@@ -38,8 +38,6 @@
     go version >= 1.13
     设置goproxy代理
     vim ~/.bashrc添加如下内容:
-    export GOPROXY=https://goproxy.io,direct
-    或者
     export GOPROXY=https://goproxy.cn,direct
 
     让bashrc生效
