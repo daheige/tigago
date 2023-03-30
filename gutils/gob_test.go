@@ -25,14 +25,14 @@ func TestGobStoreLoad(t *testing.T) {
 		return
 	}
 
-	//从文件中载入gob写入的文件内容到post
+	// 从文件中载入gob写入的文件内容到post
 	var postData Post
 
-	LoadGobData(&postData, "post_gob.md") //第一个参数接受postData的内存地址，因为loadData载入的数据会存入data中
+	LoadGobData(&postData, "post_gob.md") // 第一个参数接受postData的内存地址，因为loadData载入的数据会存入data中
 	fmt.Println(postData)
 	fmt.Println(postData.Id, postData.Name)
 
-	//实现字符串的存取
+	// 实现字符串的存取
 	err = StoreGobData("fefefe", "test_gob.md")
 	log.Println("err: ", err)
 

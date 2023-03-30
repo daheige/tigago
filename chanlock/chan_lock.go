@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// DefaultLockTimeout 默认加锁超时时间20ms就认为加锁失败
+// DefaultLockTimeout 默认加锁超时时间10ms
 var DefaultLockTimeout = 10 * time.Millisecond
 
 // ChanLock chan lock
@@ -25,21 +25,22 @@ func (l *ChanLock) Lock() {
 	l.ch <- struct{}{} // 这里是一个空结构体
 }
 
-// Unlock实现通道解锁
+// Unlock 实现通道解锁
 func (l *ChanLock) Unlock() {
 	<-l.ch
 }
 
 // TryLock 乐观锁实现
 func (l *ChanLock) TryLock(timeout ...time.Duration) bool {
+	expire := DefaultLockTimeout
 	if len(timeout) > 0 && timeout[0] > 0 {
-		return l.tryLockTimeout(timeout[0])
+		expire = timeout[0]
 	}
 
-	return l.tryLockTimeout(DefaultLockTimeout)
+	return l.tryLockTimeout(expire)
 }
 
-// TryLockTimeout 指定时间内的乐观锁
+// tryLockTimeout 指定时间内的乐观锁
 func (l *ChanLock) tryLockTimeout(timeout time.Duration) bool {
 	if timeout == 0 {
 		timeout = DefaultLockTimeout

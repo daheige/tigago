@@ -1,15 +1,15 @@
-/** Package runner 用于按照顺序，执行程序任务操作，可作为cron作业或定时任务
-runner 包可用于展示如何使用通道来监视程序的执行时间,如果程序运行时间太长,指定任务执行时间。
-这个程序可能会作为 cron 作业执行,或者在基于定时任务的云环境(如 iron.io)里执行。
-补充说明：
-可能作为cron作业或基于定时任务,可以控制程序执行时间
-使用通道来监控程序的执行时间，生命周期，甚至终止程序等。
-我们这个程序叫runner，我们可以称之为执行者。
-它可以在后台执行任何任务，而且我们还可以控制这个执行者，比如强制终止它等
-此外这个执行者也是一个很不错的模式，比如我们写好之后，交给定时任务去执行即可
-比如cron，这个模式我们还可以扩展更高效率的并发，更多灵活的控制程序的生命周期
-更高效的监控等。
-*/
+// Package runner 用于按照顺序，执行程序任务操作，可作为cron作业或定时任务
+// runner 包可用于展示如何使用通道来监视程序的执行时间,如果程序运行时间太长,指定任务执行时间。
+// 这个程序可能会作为 cron 作业执行,或者在基于定时任务的云环境(如 iron.io)里执行。
+// 补充说明：
+// 可能作为cron作业或基于定时任务,可以控制程序执行时间
+// 使用通道来监控程序的执行时间，生命周期，甚至终止程序等。
+// 我们这个程序叫runner，我们可以称之为执行者。
+// 它可以在后台执行任何任务，而且我们还可以控制这个执行者，比如强制终止它等
+// 此外这个执行者也是一个很不错的模式，比如我们写好之后，交给定时任务去执行即可
+// 比如cron，这个模式我们还可以扩展更高效率的并发，更多灵活的控制程序的生命周期
+// 更高效的监控等。
+
 package runner
 
 import (
@@ -23,7 +23,10 @@ import (
 )
 
 var (
-	ErrorTimeout = errors.New("task exec timeout")
+	// ErrTimeout timeout
+	ErrTimeout = errors.New("task exec timeout")
+
+	// ErrInterrupt interrupt signal
 	ErrInterrupt = errors.New("received interrupt signal")
 )
 
@@ -136,7 +139,7 @@ func (r *Runner) GetLastTaskId() int {
 // Start 开始执行所有的任务
 func (r *Runner) Start() error {
 	// 接收系统退出信号
-	signal.Notify(r.interrupt, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, syscall.SIGHUP)
+	signal.Notify(r.interrupt, syscall.SIGINT, syscall.SIGTERM)
 
 	r.allErrors = make(map[int]error, len(r.tasks)+1)
 
@@ -162,8 +165,8 @@ func (r *Runner) Start() error {
 
 	select {
 	case <-r.timeCh:
-		r.logger.Println(ErrorTimeout)
-		return ErrorTimeout
+		r.logger.Println(ErrTimeout)
+		return ErrTimeout
 	case <-done:
 		err := <-r.complete
 		r.logger.Println("task complete status: ", err)

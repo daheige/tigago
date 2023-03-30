@@ -1,16 +1,13 @@
 /**
 * Package mutexlock mutex trylock.
 * 在sync.Mutex基础上，实现乐观锁TryLock
+* go1.18+后在sync Mutex已经实现了TryLock
  */
 package mutexlock
 
 import (
 	"sync"
-	"sync/atomic"
-	"unsafe"
 )
-
-const mutexLocked = 1 << iota
 
 // NewMutexLock 创建lock实例
 func NewMutexLock() *Mutex {
@@ -34,5 +31,9 @@ func (m *Mutex) Unlock() {
 
 // TryLock 尝试枷锁
 func (m *Mutex) TryLock() bool {
-	return atomic.CompareAndSwapInt32((*int32)(unsafe.Pointer(&m.in)), 0, mutexLocked)
+	// const mutexLocked = 1 << iota
+	// return atomic.CompareAndSwapInt32((*int32)(unsafe.Pointer(&m.in)), 0, mutexLocked)
+	//
+	// This method has been available since go1.18, so the official design is directly adopted.
+	return m.in.TryLock()
 }

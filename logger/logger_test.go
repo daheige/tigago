@@ -84,7 +84,8 @@ func TestNewLogSugar(t *testing.T) {
 	logSugar.Error("a", 234, "x", "sugar hello world")
 }
 
-/**
+/*
+*
 BenchmarkNew 批量测试日志写入
 {"level":"info","time_local":"2020-09-20T17:21:35.883+0800",
 "caller_line":"/Users/heige/web/go/logger/logger_test.go:116",

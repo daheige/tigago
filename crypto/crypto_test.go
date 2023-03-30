@@ -12,9 +12,11 @@ func TestMd5(t *testing.T) {
 
 /*
 === RUN   TestHmac256
-    crypto_test.go:14: 20b0b3143889f19d4ef957bbdba80edb
-    crypto_test.go:16: key:  ac87d721a6171ad1
-    crypto_test.go:17: 1b1b91594b40567380e7442eaa60c140
+
+	crypto_test.go:14: 20b0b3143889f19d4ef957bbdba80edb
+	crypto_test.go:16: key:  ac87d721a6171ad1
+	crypto_test.go:17: 1b1b91594b40567380e7442eaa60c140
+
 --- PASS: TestHmac256 (0.00s)
 PASS
 */
@@ -55,7 +57,8 @@ func TestDecodeCbc256(t *testing.T) {
 	t.Log(string(bytes))
 }
 
-/**
+/*
+*
 === RUN   TestAesEbc
 crypto_test.go:54: ebc加密后: 3e75cb8bcd9d5e08
 crypto_test.go:57: ebc解密: 123456
@@ -71,7 +74,8 @@ func TestAesEbc(t *testing.T) {
 	t.Log("ebc解密:", s)
 }
 
-/**
+/*
+*
 测试aes-256-cbc加密
 $ go test -v -test.run=TestAesCbc
 === RUN   TestAesCbc

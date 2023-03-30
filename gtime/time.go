@@ -118,7 +118,7 @@ func ParseNumberUTC(t uint64) (time.Time, error) {
 	return parseNumber(t, time.UTC)
 }
 
-// StrToTime strtotime()
+// StrToTime like php strtotime()
 // StrToTime("02/01/2006 15:04:05", "02/01/2016 15:04:05") == 1451747045
 // StrToTime("3 04 PM", "8 41 PM") == -62167144740
 func StrToTime(format, strTime string) (int64, error) {

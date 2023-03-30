@@ -71,7 +71,7 @@ func (c *ConfigEngine) GetValue(key string) interface{} {
 }
 
 // GetString 从配置文件中获取string类型的值
-func (c *ConfigEngine) GetString(name string, defaultValue string) string {
+func (c *ConfigEngine) GetString(name, defaultValue string) string {
 	if !c.s.IsSet(name) {
 		return defaultValue
 	}

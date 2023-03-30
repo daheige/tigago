@@ -10,12 +10,12 @@ func TestError(t *testing.T) {
 	log.Println("error: ", e.Error())
 
 	// 类型断言
-	err := e.(*ErrorString)
+	err := e.(*ErrImpl)
 	err.code = 123
 	log.Println(err.Error())
 	log.Println("error code: ", err.code)
 	log.Println("full stack: ", string(err.Stack()))
-	log.Printf("str: %+v", e) // 会调用Error()
+	log.Printf("str: %v", e) // 会调用Error()
 }
 
 /**

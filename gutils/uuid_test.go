@@ -5,7 +5,8 @@ import (
 	"testing"
 )
 
-/**
+/*
+*
 $ go test -v -test.run TestUuid
 --- PASS: TestUuid (24.51s)
 PASS

@@ -1,6 +1,6 @@
 package setting
 
-// Option option func for Setting.
+// Option functional option for Setting.
 type Option func(s *Setting)
 
 // WithWatchFile 是否监听文件变化

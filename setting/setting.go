@@ -18,7 +18,7 @@ type Setting struct {
 
 // NewSetting create a setting entry.
 // 默认filename文件类型是yaml文件，其他类型ini,json,yml等格式也支持
-func NewSetting(dir string, filename string, opts ...Option) (*Setting, error) {
+func NewSetting(dir, filename string, opts ...Option) (*Setting, error) {
 	// 获取配置文件当前路径的绝对路径地址
 	configDir, err := filepath.Abs(dir)
 	if err != nil {

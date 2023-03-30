@@ -262,7 +262,7 @@ func HTMLEntityDecode(str string) string {
 // =====================str xss,XssUnescape func=============
 // Xss 防止xss攻击
 func Xss(str string) string {
-	if len(str) == 0 {
+	if str == "" {
 		return ""
 	}
 
@@ -278,7 +278,7 @@ func XssUnescape(str string) string {
 // Krand 根据kind生成不同风格的指定区间随机字符串
 // 纯数字kind=0,小写字母kind=1
 // 大写字母kind=2,数字+大小写字母kind=3
-func Krand(size int, kind int) string {
+func Krand(size, kind int) string {
 	oldKind, kinds, result := kind, [][]int{{10, 48}, {26, 97}, {26, 65}}, make([]byte, size)
 	is_all := kind > 2 || kind < 0
 	for i := 0; i < size; i++ {
@@ -383,14 +383,16 @@ func StrRepeat(input string, multiplier int) string {
 }
 
 // Strstr strstr()
-func Strstr(haystack string, needle string) string {
+func Strstr(haystack, needle string) string {
 	if needle == "" {
 		return ""
 	}
+
 	idx := strings.Index(haystack, needle)
 	if idx == -1 {
 		return ""
 	}
+
 	return haystack[idx+len([]byte(needle))-1:]
 }
 

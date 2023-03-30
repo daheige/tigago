@@ -1,6 +1,7 @@
 # tigago
 
     Go develop commonly used component library package.
+    Go version >= 1.16.15
 
 # About package
     
@@ -8,7 +9,6 @@
     ├── chanlock            chan实现trylock乐观锁
     ├── crypto              常见的md5,sha1,sha1file,aes/des,ecb,openssl_encrypt实现
     ├── def                 为兼容php其他语言而定义的空数组，空对象
-    ├── gnsq                go-nsq基本操作封装
     ├── goredis             基于go-redis/redis封装的redis客户端使用函数（支持cluster集群）
     ├── gpprof              pprof性能分析监控封装
     ├── grecover            golang panic/recover捕获堆栈信息实现
@@ -25,7 +25,6 @@
     ├── mytest              tigago 一些单元测试
     ├── redislock           基于redigo实现的redis+lua分布式锁实现
     ├── runner              runner用于按照顺序，执行程序任务操作，可作为cron作业或定时任务
-    ├── sem                 指定数量的空结构体缓存通道，实现信息号实现互斥锁
     ├── setting             通过viper+fsnotify实现配置文件读取，支持配置热更新
     ├── work                利用无缓冲chan创建goroutine池来控制一组task的执行
     ├── workpool            workpool工作池实现，对于百万级并发的一些场景特别适用
@@ -42,8 +41,6 @@
     export GOPROXY=https://goproxy.io,direct
     或者
     export GOPROXY=https://goproxy.cn,direct
-    或者
-    export GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 
     让bashrc生效
     source ~/.bashrc
@@ -62,7 +59,3 @@
 # License
 
     MIT
-
-# Goland Ide
-
-[![jetbrains](jetbrains-variant-2.png "jetbrains")](https://jb.gg/OpenSourceSupport)

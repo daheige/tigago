@@ -6,13 +6,16 @@ import (
 	"testing"
 )
 
-/**json解析和反解析效率
+/*
+*json解析和反解析效率
 $ time go test -v -test.run TestJson
 2019/11/27 23:21:31 {"code":"200","count":49975004,"data":["golang","php","nodejs"],"message":"ok"}
 2019/11/27 23:21:31 {"code":"200","count":49985002,"data":["golang","php","nodejs"],"message":"ok"}
 2019/11/27 23:21:31 {"code":"200","count":49995001,"data":["golang","php","nodejs"],"message":"ok"}
 --- PASS: TestJson (0.31s)
-    json_test.go:19: start test json
+
+	json_test.go:19: start test json
+
 PASS
 ok  	github.com/daheige/tigago/mytest	0.317s
 

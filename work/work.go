@@ -1,4 +1,6 @@
-/* Package work
+/*
+	Package work
+
 利用无缓冲chan创建goroutine池来控制一组task的执行
 1. work 包的目的是展示如何使用无缓冲的通道来创建一个 goroutine 池,这些 goroutine 执行
 并控制一组工作,让其并发执行。在这种情况下,使用无缓冲的通道要比随意指定一个缓冲区大

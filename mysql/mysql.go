@@ -155,7 +155,8 @@ func (conf *DbConf) SqlDB() (*sql.DB, error) {
 	return conf.dbObj.DB()
 }
 
-/**
+/*
+*
 DSN 设置mysql dsn
 mysql charset查看
 mysql> show character set where charset="utf8mb4";

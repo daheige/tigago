@@ -42,7 +42,8 @@ func WithAddCaller(b bool) Option {
 	}
 }
 
-/** WithCallerSkip 设置callerSkip
+/*
+* WithCallerSkip 设置callerSkip
 addCaller = true,并且 callerSkip > 0 会设置zap.AddCallerSkip
 zap源码包中logger.go#260 check func
 check must always be called directly by a method in the Logger interface

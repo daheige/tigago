@@ -71,7 +71,7 @@ func Hmac256(data, key string) string {
 }
 
 // HmacSha1 实现php hmac_sha1
-func HmacSha1(str string, key string) string {
+func HmacSha1(str, key string) string {
 	mac := hmac.New(sha1.New, []byte(key))
 	mac.Write([]byte(str))
 	return hex.EncodeToString(mac.Sum(nil))
@@ -189,7 +189,7 @@ CBC（密文分组链接方式）有向量的概念, 它的实现机制使加密
 // 当key 16位的时候 相当于php base64_encode(openssl_encrypt($str, 'aes-128-cbc', $key, true, $iv));
 // 当key 24位的时候 相当于php base64_encode(openssl_encrypt($str, 'aes-192-cbc', $key, true, $iv));
 // 当key 32位的时候 相当于php base64_encode(openssl_encrypt($str, 'aes-256-cbc', $key, true, $iv));
-func AesEncrypt(encodeStr, key string, iv string) (string, error) {
+func AesEncrypt(encodeStr, key, iv string) (string, error) {
 	// 根据key 生成密文
 	block, err := aes.NewCipher([]byte(key))
 	if err != nil {

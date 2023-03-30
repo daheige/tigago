@@ -19,7 +19,8 @@ func (n *myName) Task() {
 	log.Println("your name is ", n.name)
 }
 
-/**$ go test -v -test.run=TestPool
+/*
+*$ go test -v -test.run=TestPool
 2019/04/15 21:41:21 all goroutine task finish
 PASS
 ok  	github.com/daheige/tigago/work	0.213s
