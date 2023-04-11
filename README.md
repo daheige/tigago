@@ -26,6 +26,7 @@
     ├── redislock           基于redigo实现的redis+lua分布式锁实现
     ├── runner              runner用于按照顺序，执行程序任务操作，可作为cron作业或定时任务
     ├── setting             通过viper+fsnotify实现配置文件读取，支持配置热更新
+    ├── wrapper             对waitgroup/chan进行包装，提供轻松使用和安全使用wrapper等待一组协程执行完毕
     ├── work                利用无缓冲chan创建goroutine池来控制一组task的执行
     ├── workpool            workpool工作池实现，对于百万级并发的一些场景特别适用
     ├── xerrors             自定义错误类型，一般用在api/微服务等业务逻辑中，处理错误

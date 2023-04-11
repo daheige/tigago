@@ -9,6 +9,26 @@ import (
 	"time"
 )
 
+func TestViperConfig_Load(t *testing.T) {
+	conf := New(WithConfigFile("./test.yaml"), WithWatchFile())
+	if err := conf.Load(); err != nil {
+		log.Fatalln("load config err: ", err)
+	}
+
+	log.Println(conf.IsSet("app"))
+
+	var app int64
+	_ = conf.ReadSection("app", &app)
+	log.Println(app)
+
+	// check config change
+	for {
+		_ = conf.ReadSection("app", &app)
+		log.Println(app)
+		time.Sleep(2 * time.Second)
+	}
+}
+
 // app.yaml section config.
 var (
 	appServerConf = &appServerSettingS{}
@@ -34,12 +54,13 @@ func readConfig(configDir string) error {
 	log.Println(strings.TrimPrefix(filepath.Ext(filename), ".")) // yaml
 
 	log.Println(filepath.Dir("/abc/app.yaml"))
-	s, err := NewSetting(configDir, "test")
+	conf := New(WithConfigFile(configDir + "/test.yaml"))
+	err := conf.Load()
 	if err != nil {
 		return err
 	}
 
-	err = s.ReadSection("AppServer", &appServerConf)
+	err = conf.ReadSection("AppServer", &appServerConf)
 	if err != nil {
 		return err
 	}
@@ -54,31 +75,19 @@ func readConfig(configDir string) error {
 	return nil
 }
 
-// TestReadSection test config read
-/**
-AppServer:
-  AppEnv: dev
-  AppDebug: true
-  GRPCPort: 50051
-  GRPCHttpGatewayPort: 1336
-  HttpPort: 1338
-  ReadTimeout: 6
-  WriteTimeout: 6
-  LogDir: ./logs
-  JobPProfPort: 30031
-*/
 func TestReadSection(t *testing.T) {
-	readConfig("./")
+	_ = readConfig("./")
 	b, _ := json.Marshal(appServerConf)
 	log.Println("section app config: ", string(b))
 }
 
-/**
+/*
 === RUN   TestReadSection
-2020/09/14 21:27:41 app server config:  &{dev true 50051 1336 1338 6s 6s ./logs 30031}
-2020/09/14 21:27:41 section app config:
-{"app_env":"dev","app_debug":true,"grpc_port":50051,"grpc_http_gateway_port":1336,
-"http_port":1338,"read_timeout":6000000000,"write_timeout":6000000000,
+2023/04/11 17:02:11 yaml
+2023/04/11 17:02:11 /abc
+2023/04/11 17:02:11 app server config:  &{dev true 50051 1336 1338 6s 6s ./logs 30031}
+2023/04/11 17:02:11 section app config:  {"app_env":"dev","app_debug":true,"grpc_port":50051,
+"grpc_http_gateway_port":1336,"http_port":1338,"read_timeout":6000000000,"write_timeout":6000000000,
 "log_dir":"./logs","job_p_prof_port":30031}
 --- PASS: TestReadSection (0.00s)
 PASS

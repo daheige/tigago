@@ -13,8 +13,8 @@ require (
 	github.com/spf13/viper v1.15.0
 	go.uber.org/zap v1.24.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
-	gorm.io/driver/mysql v1.4.7
-	gorm.io/gorm v1.24.6
+	gorm.io/driver/mysql v1.5.0
+	gorm.io/gorm v1.25.0
 	xorm.io/xorm v1.3.2
 )
 

@@ -1,11 +1,24 @@
 package setting
 
-// Option functional option for Setting.
-type Option func(s *Setting)
+// Option config option
+type Options struct {
+	configFile string
+	watchFile  bool
+}
 
-// WithWatchFile 是否监听文件变化
-func WithWatchFile(b bool) Option {
-	return func(s *Setting) {
-		s.watchFile = b
+// Option for ConfigOption
+type Option func(*Options)
+
+// WithConfigFile set config filename
+func WithConfigFile(configFile string) Option {
+	return func(c *Options) {
+		c.configFile = configFile
+	}
+}
+
+// WithWatchFile watch file change
+func WithWatchFile() Option {
+	return func(c *Options) {
+		c.watchFile = true
 	}
 }

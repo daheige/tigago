@@ -136,7 +136,7 @@ func TestShortConnect(t *testing.T) {
 					return
 				}
 
-				sqlDB.Close()
+				_ = sqlDB.Close()
 			}()
 
 			user := &myUser{}
